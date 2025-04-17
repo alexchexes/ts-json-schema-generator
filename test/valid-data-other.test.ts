@@ -43,7 +43,20 @@ describe("valid-data-other", () => {
     it("import-exposed", assertValidSchema("import-exposed", "MyObject"));
     it("import-internal", assertValidSchema("import-internal", "MyObject", { jsDoc: "basic" }));
     it("import-anonymous", assertValidSchema("import-anonymous", "MyObject"));
+
     it("import-complex-util", assertValidSchema("import-complex-util", "*"));
+    it("import-deep-partial", assertValidSchema("import-deep-partial", "MyObject"));
+    it("import-merge", assertValidSchema("import-merge", "MyObject"));
+    it("import-simplify", assertValidSchema("import-simplify", "MyObject"));
+    it("import-writable", assertValidSchema("import-writable", "MyObject"));
+    it("import-override", assertValidSchema("import-override", "MyObject"));
+    it("import-pick-index-signature", assertValidSchema("import-pick-index-signature", "MyObject"));
+    it("import-omit-index-signature", assertValidSchema("import-omit-index-signature", "MyObject"));
+
+    it("import-plain", assertValidSchema("import-plain", "MyObject"));
+    it("import-generic-nonmapped", assertValidSchema("import-generic-nonmapped", "MyObject"));
+    it("import-nongeneric-mapped", assertValidSchema("import-nongeneric-mapped", "MyObject"));
+    it("import-generic-mapped", assertValidSchema("import-generic-mapped", "MyObject"));
 
     it("generic-simple", assertValidSchema("generic-simple", "MyObject"));
     it("generic-simple", assertValidSchema("generic-simple", "*", { expose: "all" }));
