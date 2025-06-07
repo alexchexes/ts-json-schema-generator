@@ -1,0 +1,242 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "InterfaceWithImportedOverrideA": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "InterfaceWithImportedOverrideB1": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "InterfaceWithImportedOverrideB2": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "InterfaceWithOverrideA": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "InterfaceWithOverrideB": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "Merge<interface-1043763109-215-276-1043763109-0-3705,structure-1043763109-1211-1256-1043763109-1168-1262-1043763109-1156-1262-1043763109-1106-1265-1043763109-0-3705>": {
+      "$ref": "#/definitions/Simplify%3C(alias-875644681-334-481-875644681-0-795%3Calias-875644681-481-638-875644681-0-795%3Cinterface-1043763109-215-276-1043763109-0-3705%3E%2Calias-875644681-481-638-875644681-0-795%3Cstructure-1043763109-1211-1256-1043763109-1168-1262-1043763109-1156-1262-1043763109-1106-1265-1043763109-0-3705%3E%3E%26alias-875644681-334-481-875644681-0-795%3Calias-875644681-638-794-875644681-0-795%3Cinterface-1043763109-215-276-1043763109-0-3705%3E%2Calias-875644681-638-794-875644681-0-795%3Cstructure-1043763109-1211-1256-1043763109-1168-1262-1043763109-1156-1262-1043763109-1106-1265-1043763109-0-3705%3E%3E)%3E"
+    },
+    "Merge<interface-1043763109-215-276-1043763109-0-3705,structure-1043763109-669-702-1043763109-630-704-1043763109-588-705-1043763109-0-3705>": {
+      "$ref": "#/definitions/Simplify%3C(alias-875644681-334-481-875644681-0-795%3Calias-875644681-481-638-875644681-0-795%3Cinterface-1043763109-215-276-1043763109-0-3705%3E%2Calias-875644681-481-638-875644681-0-795%3Cstructure-1043763109-669-702-1043763109-630-704-1043763109-588-705-1043763109-0-3705%3E%3E%26alias-875644681-334-481-875644681-0-795%3Calias-875644681-638-794-875644681-0-795%3Cinterface-1043763109-215-276-1043763109-0-3705%3E%2Calias-875644681-638-794-875644681-0-795%3Cstructure-1043763109-669-702-1043763109-630-704-1043763109-588-705-1043763109-0-3705%3E%3E)%3E"
+    },
+    "OverrideA<interface-1043763109-215-276-1043763109-0-3705,structure-1043763109-435-468-1043763109-397-470-1043763109-276-471-1043763109-0-3705>": {
+      "additionalProperties": false,
+      "description": "'Override' Implementation #1",
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "OverrideA<interface-1043763109-215-276-1043763109-0-3705,structure-1043763109-893-938-1043763109-851-944-1043763109-839-944-1043763109-705-947-1043763109-0-3705>": {
+      "additionalProperties": false,
+      "description": "'Override' Implementation #1",
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "OverrideB1<interface-1043763109-215-276-1043763109-0-3705,structure-1043763109-1052-1097-1043763109-1009-1103-1043763109-997-1103-1043763109-947-1106-1043763109-0-3705>": {
+      "additionalProperties": false,
+      "description": "'Override' Implementation #2 - type-fest's 'OverrideProperties' This meant to be imported in the file that uses it, yet all utils it uses must stay in this same file",
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "OverrideB1<interface-1043763109-215-276-1043763109-0-3705,structure-1043763109-552-585-1043763109-513-587-1043763109-471-588-1043763109-0-3705>": {
+      "additionalProperties": false,
+      "description": "'Override' Implementation #2 - type-fest's 'OverrideProperties' This meant to be imported in the file that uses it, yet all utils it uses must stay in this same file",
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "OverrideB2<interface-1043763109-215-276-1043763109-0-3705,structure-1043763109-1211-1256-1043763109-1168-1262-1043763109-1156-1262-1043763109-1106-1265-1043763109-0-3705>": {
+      "$ref": "#/definitions/Merge%3Cinterface-1043763109-215-276-1043763109-0-3705%2Cstructure-1043763109-1211-1256-1043763109-1168-1262-1043763109-1156-1262-1043763109-1106-1265-1043763109-0-3705%3E",
+      "description": "'Override' Implementation #2 - type-fest's 'OverrideProperties' This meant to be imported in the file that uses it, and all utils used by this, must also must be imported, as well as their utils"
+    },
+    "OverrideB2<interface-1043763109-215-276-1043763109-0-3705,structure-1043763109-669-702-1043763109-630-704-1043763109-588-705-1043763109-0-3705>": {
+      "$ref": "#/definitions/Merge%3Cinterface-1043763109-215-276-1043763109-0-3705%2Cstructure-1043763109-669-702-1043763109-630-704-1043763109-588-705-1043763109-0-3705%3E",
+      "description": "'Override' Implementation #2 - type-fest's 'OverrideProperties' This meant to be imported in the file that uses it, and all utils used by this, must also must be imported, as well as their utils"
+    },
+    "Simplify<(alias-875644681-334-481-875644681-0-795<alias-875644681-481-638-875644681-0-795<interface-1043763109-215-276-1043763109-0-3705>,alias-875644681-481-638-875644681-0-795<structure-1043763109-1211-1256-1043763109-1168-1262-1043763109-1156-1262-1043763109-1106-1265-1043763109-0-3705>>&alias-875644681-334-481-875644681-0-795<alias-875644681-638-794-875644681-0-795<interface-1043763109-215-276-1043763109-0-3705>,alias-875644681-638-794-875644681-0-795<structure-1043763109-1211-1256-1043763109-1168-1262-1043763109-1156-1262-1043763109-1106-1265-1043763109-0-3705>>)>": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "Simplify<(alias-875644681-334-481-875644681-0-795<alias-875644681-481-638-875644681-0-795<interface-1043763109-215-276-1043763109-0-3705>,alias-875644681-481-638-875644681-0-795<structure-1043763109-669-702-1043763109-630-704-1043763109-588-705-1043763109-0-3705>>&alias-875644681-334-481-875644681-0-795<alias-875644681-638-794-875644681-0-795<interface-1043763109-215-276-1043763109-0-3705>,alias-875644681-638-794-875644681-0-795<structure-1043763109-669-702-1043763109-630-704-1043763109-588-705-1043763109-0-3705>>)>": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "TypeWithImportedOverrideA": {
+      "$ref": "#/definitions/OverrideA%3Cinterface-1043763109-215-276-1043763109-0-3705%2Cstructure-1043763109-435-468-1043763109-397-470-1043763109-276-471-1043763109-0-3705%3E"
+    },
+    "TypeWithImportedOverrideB1": {
+      "$ref": "#/definitions/OverrideB1%3Cinterface-1043763109-215-276-1043763109-0-3705%2Cstructure-1043763109-552-585-1043763109-513-587-1043763109-471-588-1043763109-0-3705%3E"
+    },
+    "TypeWithImportedOverrideB2": {
+      "$ref": "#/definitions/OverrideB2%3Cinterface-1043763109-215-276-1043763109-0-3705%2Cstructure-1043763109-669-702-1043763109-630-704-1043763109-588-705-1043763109-0-3705%3E"
+    },
+    "TypeWithOverrideA": {
+      "additionalProperties": false,
+      "description": "'Override' Implementation #1 This must stay in this same file which uses it",
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "TypeWithOverrideB2": {
+      "additionalProperties": false,
+      "description": "'Override' Implementation #2 - type-fest's 'OverrideProperties' This must stay in this same file which uses it",
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "foo"
+      ],
+      "type": "object"
+    }
+  }
+}
