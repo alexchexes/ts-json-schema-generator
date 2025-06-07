@@ -1,0 +1,25 @@
+{
+  "$ref": "#/definitions/MyObject",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MappedGeneric<alias-799778481-48-93-799778481-0-235>": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "type": "number"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "foo",
+        "bar"
+      ],
+      "type": "object"
+    },
+    "MyObject": {
+      "$ref": "#/definitions/MappedGeneric%3Calias-799778481-48-93-799778481-0-235%3E"
+    }
+  }
+}
