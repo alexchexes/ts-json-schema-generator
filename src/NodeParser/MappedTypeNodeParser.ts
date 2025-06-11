@@ -65,7 +65,10 @@ export class MappedTypeNodeParser implements SubNodeParser {
                 return type instanceof NeverType ? new NeverType() : new ArrayType(type);
             }
             // Key type widens to `string`
-            const type = this.childNodeParser.createType(node.type!, context);
+            const type = this.childNodeParser.createType(
+                node.type!,
+                this.createSubContext(node, keyListType, context), // bind mapped-type key
+            );
             // const resultType = type instanceof NeverType ? new NeverType() : new ObjectType(id, [], [], type);
             const resultType = new ObjectType(id, [], [], type);
             if (resultType) {
@@ -159,10 +162,18 @@ export class MappedTypeNodeParser implements SubNodeParser {
         context: Context,
     ): BaseType | boolean {
         if (isDeepLiteralUnion(keyListType)) {
-            return this.additionalProperties;
+            return false;
         }
 
-        const key = keyListType.getTypes().filter((type) => !(derefType(type) instanceof LiteralType))[0];
+        // If the key-set is a *pure* literal union we can close the object
+        // (that’s what `Override` needs so its two halves merge later on).
+        // Otherwise keep it open – `keyof T` may widen to `string`.
+
+        const key = keyListType.getTypes().filter((t) => !(derefType(t) instanceof LiteralType))[0]; // non-literal part, if any
+
+        if (!key) {
+            return false; // only literal keys → additionalProperties = false
+        }
 
         if (key) {
             return (
