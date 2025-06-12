@@ -61,7 +61,14 @@ export class IndexedAccessTypeNodeParser implements SubNodeParser {
 
         const indexTypes = indexType instanceof UnionType ? indexType.getTypes() : [indexType];
         const propertyTypes = indexTypes.map((type) => {
-            if (!(type instanceof LiteralType || type instanceof StringType || type instanceof NumberType)) {
+            if (
+                !(
+                    type instanceof LiteralType ||
+                    type instanceof StringType ||
+                    type instanceof NumberType ||
+                    type.getId?.() === "unknown"
+                )
+            ) {
                 throw new LogicError(
                     node,
                     `Unexpected type "${type.getId()}" (expected "LiteralType.js" or "StringType.js" or "NumberType.js")`,
