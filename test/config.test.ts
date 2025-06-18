@@ -391,6 +391,14 @@ describe("config", () => {
     );
 
     it(
+        "additional-properties-optional-keys",
+        assertSchema("additional-properties-optional-keys", {
+            type: "*",
+            additionalProperties: true,
+        }),
+    );
+
+    it(
         "arrow-function-parameters",
         assertSchema("arrow-function-parameters", {
             type: "myFunction",
