@@ -1,3 +1,1 @@
-export type MyObject = {
-    key: string | symbol;
-};
+export type MyType = string | symbol;

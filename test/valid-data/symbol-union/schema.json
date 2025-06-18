@@ -1,23 +1,14 @@
 {
-  "$ref": "#/definitions/MyObject",
+  "$ref": "#/definitions/MyType",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
-    "MyObject": {
-      "additionalProperties": false,
-      "properties": {
-        "key": {
-          "anyOf": [
-            {
-              "type": "string"
-            },
-            {}
-          ]
-        }
-      },
-      "required": [
-        "key"
-      ],
-      "type": "object"
+    "MyType": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {}
+      ]
     }
   }
 }

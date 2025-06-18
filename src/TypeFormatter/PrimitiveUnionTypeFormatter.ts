@@ -24,13 +24,15 @@ export class PrimitiveUnionTypeFormatter implements SubTypeFormatter {
     }
 
     protected isPrimitiveUnion(type: UnionType): boolean {
-        return type.getTypes().every(
-            (item) =>
-                item instanceof StringType ||
-                item instanceof NumberType ||
-                item instanceof BooleanType ||
-                item instanceof NullType,
-        );
+        return type
+            .getTypes()
+            .every(
+                (item) =>
+                    item instanceof StringType ||
+                    item instanceof NumberType ||
+                    item instanceof BooleanType ||
+                    item instanceof NullType,
+            );
     }
 
     protected getPrimitiveType(item: BaseType): RawTypeName {
