@@ -1,6 +1,15 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
+    "Dep3": {
+      "additionalProperties": false,
+      "properties": {
+        "baz": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "DepType": {
       "type": "string"
     },
@@ -14,13 +23,7 @@
           "type": "number"
         },
         "baz": {
-          "additionalProperties": false,
-          "properties": {
-            "nested": {
-              "type": "boolean"
-            }
-          },
-          "type": "object"
+          "$ref": "#/definitions/Dep3"
         },
         "foo": {
           "type": "string"
