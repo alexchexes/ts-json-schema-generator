@@ -213,10 +213,10 @@ export class SchemaGenerator {
 
                 if (ts.isImportSpecifier(declaration)) {
                     // Handling the `Foo` in `import { Foo } from "./lib"; export { Foo };`
-                    const type = typeChecker.getTypeAtLocation(declaration);
+                    const target = typeChecker.getAliasedSymbol(symbol);
 
-                    if (type.symbol?.declarations?.length === 1) {
-                        this.inspectNode(type.symbol.declarations[0], typeChecker, allTypes);
+                    if (target.declarations?.length === 1) {
+                        this.inspectNode(target.declarations[0], typeChecker, allTypes);
                     }
                 } else {
                     // Handling the `Bar` in `export { Bar } from './lib';`
@@ -289,9 +289,22 @@ export class SchemaGenerator {
         if (this.config?.jsDoc !== "none" && hasJsDocTag(node, "internal")) {
             return false;
         }
-
         //@ts-expect-error - internal typescript API
-        return !!node.localSymbol?.exportSymbol;
+        if (node.localSymbol?.exportSymbol) {
+            return true;
+        }
+
+        const typeChecker = this.program.getTypeChecker();
+        const sourceSymbol = typeChecker.getSymbolAtLocation(node.getSourceFile());
+        if (!sourceSymbol) {
+            return false;
+        }
+        const exports = typeChecker.getExportsOfModule(sourceSymbol);
+        const declSymbol = symbolAtNode(node);
+        return exports.some((ex) => {
+            const target = ex.flags & ts.SymbolFlags.Alias ? typeChecker.getAliasedSymbol(ex) : ex;
+            return target === declSymbol;
+        });
     }
 
     protected isGenericType(node: ts.TypeAliasDeclaration): boolean {

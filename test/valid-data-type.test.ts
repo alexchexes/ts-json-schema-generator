@@ -155,4 +155,5 @@ describe("valid-data-type", () => {
         "export-star-prune-unreachable",
         assertValidSchema("export-star-prune-unreachable", "*", undefined, { mainTsOnly: true }),
     );
+    it("import-export-reexport", assertValidSchema("import-export-reexport", "*", undefined, { mainTsOnly: true }));
 });

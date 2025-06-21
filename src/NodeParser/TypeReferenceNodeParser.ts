@@ -7,6 +7,7 @@ import { ArrayType } from "../Type/ArrayType.js";
 import type { BaseType } from "../Type/BaseType.js";
 import { StringType } from "../Type/StringType.js";
 import { UnknownType } from "../Type/UnknownType.js";
+import { DefinitionType } from "../Type/DefinitionType.js";
 import { symbolAtNode } from "../Utils/symbolAtNode.js";
 
 const invalidTypes: Record<number, boolean> = {
@@ -42,7 +43,67 @@ export class TypeReferenceNodeParser implements SubNodeParser {
                 return new AnyType();
             }
 
-            return this.childNodeParser.createType(declaration, this.createSubContext(node, context));
+            const type = this.childNodeParser.createType(declaration, this.createSubContext(node, context));
+
+            // Look at the declaration that introduced the alias so we can check
+            // whether it originated from a type-only import.
+            const aliasDeclaration = typeSymbol.declarations?.[0];
+            let typeOnly = false;
+            let reExported = false;
+            let parent: ts.Node | undefined = aliasDeclaration;
+            while (parent) {
+                if (ts.isImportDeclaration(parent)) {
+                    // `import type` declarations are marked via `isTypeOnly` on the
+                    // import clause in the AST.
+                    typeOnly = !!parent.importClause?.isTypeOnly;
+                    break;
+                }
+                if (ts.isImportEqualsDeclaration(parent)) {
+                    // CommonJS style `import x = require(...)` can also be marked
+                    // as type-only via `isTypeOnly`.
+                    typeOnly = !!parent.isTypeOnly;
+                    break;
+                }
+                parent = parent.parent;
+            }
+
+            if (aliasDeclaration && ts.isImportSpecifier(aliasDeclaration)) {
+                const moduleSymbol = this.typeChecker.getSymbolAtLocation(aliasDeclaration.getSourceFile());
+                if (moduleSymbol) {
+                    const moduleExports = this.typeChecker.getExportsOfModule(moduleSymbol);
+                    for (const moduleExport of moduleExports) {
+                        const targetSymbol =
+                            moduleExport.flags & ts.SymbolFlags.Alias
+                                ? this.typeChecker.getAliasedSymbol(moduleExport)
+                                : moduleExport;
+                        if (targetSymbol.name === aliasDeclaration.name.text) {
+                            reExported = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!typeOnly && !reExported && !(aliasedSymbol.flags & ts.SymbolFlags.Value)) {
+                if (
+                    aliasDeclaration &&
+                    ts.isImportSpecifier(aliasDeclaration) &&
+                    (aliasDeclaration.propertyName?.text ?? aliasDeclaration.name.text) === aliasDeclaration.name.text
+                ) {
+                    // If the import did not explicitly rename the specifier and
+                    // the symbol resolves to a type without a runtime value,
+                    // treat it as type-only even if `import type` wasn't used.
+                    typeOnly = true;
+                }
+            }
+
+            if (typeOnly && !reExported && type instanceof DefinitionType) {
+                // Inline type-only imports to avoid generating redundant
+                // definitions in the output schema.
+                return type.getType();
+            }
+
+            return type;
         }
 
         if (typeSymbol.flags & ts.SymbolFlags.TypeParameter) {
