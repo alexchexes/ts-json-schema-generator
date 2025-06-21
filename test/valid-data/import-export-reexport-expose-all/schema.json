@@ -1,0 +1,149 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "AsTypeDirectlyReexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "AsTypeNotReexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "AsTypeReexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Dep2_AsTypeDirectlyReexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Dep2_AsTypeNotReexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Dep2_AsTypeReexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Dep2_DirectlyReexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Dep2_NotReexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Dep2_Reexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "DirectlyReexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "IntermediateFileObject": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "$ref": "#/definitions/Dep2_NotReexported"
+        },
+        "baz": {
+          "$ref": "#/definitions/Dep2_AsTypeReexported"
+        },
+        "foo": {
+          "$ref": "#/definitions/Dep2_Reexported"
+        },
+        "qux": {
+          "$ref": "#/definitions/Dep2_AsTypeNotReexported"
+        }
+      },
+      "type": "object"
+    },
+    "MyObject": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "$ref": "#/definitions/NotReexported"
+        },
+        "baz": {
+          "$ref": "#/definitions/AsTypeReexported"
+        },
+        "foo": {
+          "$ref": "#/definitions/Reexported"
+        },
+        "qux": {
+          "$ref": "#/definitions/AsTypeNotReexported"
+        }
+      },
+      "type": "object"
+    },
+    "NotReexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Reexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

@@ -9,6 +9,7 @@ import { StringType } from "../Type/StringType.js";
 import { UnknownType } from "../Type/UnknownType.js";
 import { DefinitionType } from "../Type/DefinitionType.js";
 import { symbolAtNode } from "../Utils/symbolAtNode.js";
+import type { Config } from "../Config.js";
 
 const invalidTypes: Record<number, boolean> = {
     [ts.SyntaxKind.ModuleDeclaration]: true,
@@ -19,6 +20,7 @@ export class TypeReferenceNodeParser implements SubNodeParser {
     public constructor(
         protected typeChecker: ts.TypeChecker,
         protected childNodeParser: NodeParser,
+        protected expose: Config["expose"],
     ) {}
 
     public supportsNode(node: ts.TypeReferenceNode): boolean {
@@ -97,9 +99,9 @@ export class TypeReferenceNodeParser implements SubNodeParser {
                 }
             }
 
-            if (typeOnly && !reExported && type instanceof DefinitionType) {
+            if (typeOnly && !reExported && this.expose !== "all" && type instanceof DefinitionType) {
                 // Inline type-only imports to avoid generating redundant
-                // definitions in the output schema.
+                // definitions in the output schema when not exposing all types.
                 return type.getType();
             }
 
