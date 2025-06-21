@@ -17,12 +17,30 @@ const invalidTypes: Record<number, boolean> = {
 };
 
 export class TypeReferenceNodeParser implements SubNodeParser {
+    protected readonly rootExports = new Set<ts.Symbol>();
+
     public constructor(
         protected typeChecker: ts.TypeChecker,
         protected childNodeParser: NodeParser,
-        protected rootFileNames: readonly string[],
+        protected program: ts.Program,
         protected expose: Config["expose"],
-    ) {}
+    ) {
+        // Collect all types exported from the root files even if their declarations are outside the root files
+        for (const fileName of program.getRootFileNames()) {
+            const sourceFile = program.getSourceFile(fileName);
+            if (!sourceFile) {
+                continue;
+            }
+            const moduleSymbol = this.typeChecker.getSymbolAtLocation(sourceFile);
+            if (!moduleSymbol) {
+                continue;
+            }
+            for (const exp of this.typeChecker.getExportsOfModule(moduleSymbol)) {
+                const target = exp.flags & ts.SymbolFlags.Alias ? this.typeChecker.getAliasedSymbol(exp) : exp;
+                this.rootExports.add(target);
+            }
+        }
+    }
 
     public supportsNode(node: ts.TypeReferenceNode): boolean {
         return node.kind === ts.SyntaxKind.TypeReference;
@@ -36,6 +54,7 @@ export class TypeReferenceNodeParser implements SubNodeParser {
             // property on the node itself.
             symbolAtNode(node.typeName)!;
 
+        // check if the reference came from an `import`
         if (typeSymbol.flags & ts.SymbolFlags.Alias) {
             const aliasedSymbol = this.typeChecker.getAliasedSymbol(typeSymbol);
 
@@ -48,28 +67,29 @@ export class TypeReferenceNodeParser implements SubNodeParser {
 
             const type = this.childNodeParser.createType(declaration, this.createSubContext(node, context));
 
-            // Look at the declaration that introduced the alias so we can check
-            // whether it originated from a type-only import.
+            // Look at the declaration that introduced the alias so we can check whether it
+            // originated from a type-only import
             const aliasDeclaration = typeSymbol.declarations?.[0];
             let typeOnly = false;
-            let reExported = false;
+            let reExported = this.rootExports.has(aliasedSymbol);
             let parent: ts.Node | undefined = aliasDeclaration;
             while (parent) {
                 if (ts.isImportDeclaration(parent)) {
-                    // `import type` declarations are marked via `isTypeOnly` on the
-                    // import clause in the AST.
+                    // `import type` declarations are marked via `isTypeOnly` on the import clause in the AST
                     typeOnly = !!parent.importClause?.isTypeOnly;
                     break;
                 }
                 if (ts.isImportEqualsDeclaration(parent)) {
-                    // CommonJS style `import x = require(...)` can also be marked
-                    // as type-only via `isTypeOnly`.
+                    // CommonJS style `import x = require(...)` can also be marked as type-only via `isTypeOnly`
                     typeOnly = !!parent.isTypeOnly;
                     break;
                 }
                 parent = parent.parent;
             }
 
+            // If the alias came from an `import { Foo } from "..."`, check whether this source file
+            // also re-exports the same symbol. A re-export means `Foo` became a part of the module's
+            // public surface, so we keep a separate schema definition by forcing `reExported = true`.
             if (aliasDeclaration && ts.isImportSpecifier(aliasDeclaration)) {
                 const moduleSymbol = this.typeChecker.getSymbolAtLocation(aliasDeclaration.getSourceFile());
                 if (moduleSymbol) {
@@ -87,29 +107,31 @@ export class TypeReferenceNodeParser implements SubNodeParser {
                 }
             }
 
-            if (!typeOnly && !reExported && this.expose !== "all" && !(aliasedSymbol.flags & ts.SymbolFlags.Value)) {
-                if (
-                    aliasDeclaration &&
-                    ts.isImportSpecifier(aliasDeclaration) &&
-                    (aliasDeclaration.propertyName?.text ?? aliasDeclaration.name.text) === aliasDeclaration.name.text
-                ) {
-                    // If the import did not explicitly rename the specifier and
-                    // the symbol resolves to a type without a runtime value,
-                    // treat it as type-only even if `import type` wasn't used
-                    // when the original declaration's source file wasn't part
-                    // of the program's root files (e.g. when using mainTsOnly).
-                    const rootFileNames = this.rootFileNames;
-                    const declSource = aliasedSymbol.declarations?.[0]?.getSourceFile().fileName;
-                    if (declSource && !rootFileNames.includes(declSource)) {
-                        typeOnly = true;
+            // If imported symbol isn't publicly re-exported AND the `expose` option doesn't tell us
+            // to expose all, decide whether we can inline imported symbol instead of generating definition
+            if (!reExported && this.expose !== "all") {
+                if (!typeOnly && !(aliasedSymbol.flags & ts.SymbolFlags.Value)) {
+                    if (
+                        aliasDeclaration &&
+                        ts.isImportSpecifier(aliasDeclaration) &&
+                        (aliasDeclaration.propertyName?.text ?? aliasDeclaration.name.text) ===
+                            aliasDeclaration.name.text
+                    ) {
+                        // If the import didn't explicitly rename the specifier and the symbol resolves
+                        // to a type without a runtime value, treat it as type-only even if `import type` wasn't used
+                        // when the original declaration's source file wasn't part of the program's root files
+                        const rootFileNames = this.program.getRootFileNames();
+                        const declSource = aliasedSymbol.declarations?.[0]?.getSourceFile().fileName;
+                        if (declSource && !rootFileNames.includes(declSource)) {
+                            typeOnly = true;
+                        }
                     }
                 }
-            }
 
-            if (typeOnly && !reExported && this.expose !== "all" && type instanceof DefinitionType) {
-                // Inline type-only imports to avoid generating redundant
-                // definitions in the output schema.
-                return type.getType();
+                if (typeOnly && type instanceof DefinitionType) {
+                    // Inline type-only imports to avoid generating redundant definitions in the output schema.
+                    return type.getType();
+                }
             }
 
             return type;

@@ -72,6 +72,7 @@ describe("valid-data-other", () => {
     it("multiple-roots1", assertValidSchema("multiple-roots1"));
     it("multiple-roots1-star", assertValidSchema("multiple-roots1", "*"));
     it("multiple-roots2", assertValidSchema("multiple-roots2/schema"));
+    it("multiple-roots2-cross-export", assertValidSchema("multiple-roots2-cross-export/schema"));
     it("keyof-typeof-enum", assertValidSchema("keyof-typeof-enum", "MyObject"));
 
     it("symbol", assertValidSchema("symbol", "MyObject"));
