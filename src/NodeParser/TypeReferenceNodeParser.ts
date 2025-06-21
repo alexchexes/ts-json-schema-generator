@@ -20,6 +20,7 @@ export class TypeReferenceNodeParser implements SubNodeParser {
     public constructor(
         protected typeChecker: ts.TypeChecker,
         protected childNodeParser: NodeParser,
+        protected rootFileNames: readonly string[],
         protected expose: Config["expose"],
     ) {}
 
@@ -86,7 +87,7 @@ export class TypeReferenceNodeParser implements SubNodeParser {
                 }
             }
 
-            if (!typeOnly && !reExported && !(aliasedSymbol.flags & ts.SymbolFlags.Value)) {
+            if (!typeOnly && !reExported && this.expose !== "all" && !(aliasedSymbol.flags & ts.SymbolFlags.Value)) {
                 if (
                     aliasDeclaration &&
                     ts.isImportSpecifier(aliasDeclaration) &&
@@ -94,14 +95,20 @@ export class TypeReferenceNodeParser implements SubNodeParser {
                 ) {
                     // If the import did not explicitly rename the specifier and
                     // the symbol resolves to a type without a runtime value,
-                    // treat it as type-only even if `import type` wasn't used.
-                    typeOnly = true;
+                    // treat it as type-only even if `import type` wasn't used
+                    // when the original declaration's source file wasn't part
+                    // of the program's root files (e.g. when using mainTsOnly).
+                    const rootFileNames = this.rootFileNames;
+                    const declSource = aliasedSymbol.declarations?.[0]?.getSourceFile().fileName;
+                    if (declSource && !rootFileNames.includes(declSource)) {
+                        typeOnly = true;
+                    }
                 }
             }
 
             if (typeOnly && !reExported && this.expose !== "all" && type instanceof DefinitionType) {
                 // Inline type-only imports to avoid generating redundant
-                // definitions in the output schema when not exposing all types.
+                // definitions in the output schema.
                 return type.getType();
             }
 
