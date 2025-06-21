@@ -7,6 +7,15 @@
     "DepType2": {
       "type": "string"
     },
+    "ImportedAsTypeReexported": {
+      "additionalProperties": false,
+      "properties": {
+        "nested": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "MyObject": {
       "additionalProperties": false,
       "properties": {
@@ -24,6 +33,15 @@
         },
         "foo": {
           "type": "string"
+        },
+        "qux": {
+          "additionalProperties": false,
+          "properties": {
+            "nested": {
+              "type": "boolean"
+            }
+          },
+          "type": "object"
         }
       },
       "type": "object"
