@@ -130,7 +130,9 @@ export function createParser(program: ts.Program, config: CompletedConfig, augme
         .addNodeParser(new ParenthesizedNodeParser(chainNodeParser))
 
         .addNodeParser(new PromiseNodeParser(typeChecker, chainNodeParser))
-        .addNodeParser(new TypeReferenceNodeParser(typeChecker, chainNodeParser))
+        .addNodeParser(
+            new TypeReferenceNodeParser(typeChecker, chainNodeParser, program.getRootFileNames(), config.expose),
+        )
         .addNodeParser(new ExpressionWithTypeArgumentsNodeParser(typeChecker, chainNodeParser))
         .addNodeParser(new IndexedAccessTypeNodeParser(typeChecker, chainNodeParser))
         .addNodeParser(new InferTypeNodeParser(typeChecker, chainNodeParser))

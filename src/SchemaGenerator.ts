@@ -31,8 +31,8 @@ export class SchemaGenerator {
             rootType: this.nodeParser.createType(rootNode, new Context()),
         }));
 
-        const rootTypeDefinition =
-            roots.length === 1 ? this.getRootTypeDefinition(roots[0].rootType, roots[0].rootNode) : undefined;
+        const rootTypeDefinitions = roots.map((root) => this.getRootTypeDefinition(root.rootType, root.rootNode));
+        const rootTypeDefinition = rootTypeDefinitions.length === 1 ? rootTypeDefinitions[0] : undefined;
         const definitions: StringMap<Definition> = {};
 
         for (const root of roots) {
@@ -47,7 +47,10 @@ export class SchemaGenerator {
             }
         }
 
-        const reachableDefinitions = removeUnreachable(rootTypeDefinition, definitions);
+        const reachableDefinitions = rootTypeDefinitions.reduce<StringMap<Definition>>(
+            (acc, def) => Object.assign(acc, removeUnreachable(def, definitions)),
+            {},
+        );
 
         return {
             ...(this.config?.schemaId ? { $id: this.config.schemaId } : {}),
@@ -210,10 +213,10 @@ export class SchemaGenerator {
 
                 if (ts.isImportSpecifier(declaration)) {
                     // Handling the `Foo` in `import { Foo } from "./lib"; export { Foo };`
-                    const type = typeChecker.getTypeAtLocation(declaration);
+                    const target = typeChecker.getAliasedSymbol(symbol);
 
-                    if (type.symbol?.declarations?.length === 1) {
-                        this.inspectNode(type.symbol.declarations[0], typeChecker, allTypes);
+                    if (target.declarations?.length === 1) {
+                        this.inspectNode(target.declarations[0], typeChecker, allTypes);
                     }
                 } else {
                     // Handling the `Bar` in `export { Bar } from './lib';`
@@ -229,11 +232,18 @@ export class SchemaGenerator {
                 return;
             }
 
-            // export { variable } clauses
+            if (node.exportClause) {
+                // export { Foo } from './lib' or export { Foo };
+                // export * as Foo from './lib' should not import all exports
+                ts.forEachChild(node.exportClause, (subnode) => this.inspectNode(subnode, typeChecker, allTypes));
+                return;
+            }
+
             if (!node.moduleSpecifier) {
                 return;
             }
 
+            // export * from './lib'
             const symbol = typeChecker.getSymbolAtLocation(node.moduleSpecifier);
 
             // should never hit this (maybe type error in user's code)
@@ -279,9 +289,22 @@ export class SchemaGenerator {
         if (this.config?.jsDoc !== "none" && hasJsDocTag(node, "internal")) {
             return false;
         }
-
         //@ts-expect-error - internal typescript API
-        return !!node.localSymbol?.exportSymbol;
+        if (node.localSymbol?.exportSymbol) {
+            return true;
+        }
+
+        const typeChecker = this.program.getTypeChecker();
+        const sourceSymbol = typeChecker.getSymbolAtLocation(node.getSourceFile());
+        if (!sourceSymbol) {
+            return false;
+        }
+        const exports = typeChecker.getExportsOfModule(sourceSymbol);
+        const declSymbol = symbolAtNode(node);
+        return exports.some((ex) => {
+            const target = ex.flags & ts.SymbolFlags.Alias ? typeChecker.getAliasedSymbol(ex) : ex;
+            return target === declSymbol;
+        });
     }
 
     protected isGenericType(node: ts.TypeAliasDeclaration): boolean {
