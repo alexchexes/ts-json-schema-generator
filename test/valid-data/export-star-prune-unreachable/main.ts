@@ -1,4 +1,4 @@
-import type { NotReexported, SomeInterface } from "./dep";
+import { NotReexported, SomeInterface } from "./dep";
 export { DepType } from "./dep";
 export * from "./dep2";
 
@@ -8,3 +8,5 @@ export interface MyObject extends SomeInterface {
     bar?: number;
     baz?: NotReexported;
 }
+
+export { NotReexported };

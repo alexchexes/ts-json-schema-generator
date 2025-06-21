@@ -7,6 +7,7 @@ import { ArrayType } from "../Type/ArrayType.js";
 import type { BaseType } from "../Type/BaseType.js";
 import { StringType } from "../Type/StringType.js";
 import { UnknownType } from "../Type/UnknownType.js";
+import { DefinitionType } from "../Type/DefinitionType.js";
 import { symbolAtNode } from "../Utils/symbolAtNode.js";
 
 const invalidTypes: Record<number, boolean> = {
@@ -42,7 +43,48 @@ export class TypeReferenceNodeParser implements SubNodeParser {
                 return new AnyType();
             }
 
-            return this.childNodeParser.createType(declaration, this.createSubContext(node, context));
+            const type = this.childNodeParser.createType(declaration, this.createSubContext(node, context));
+
+            // Look at the declaration that introduced the alias so we can check
+            // whether it originated from a type-only import.
+            const aliasDeclaration = typeSymbol.declarations?.[0];
+            let typeOnly = false;
+            let parent: ts.Node | undefined = aliasDeclaration;
+            while (parent) {
+                if (ts.isImportDeclaration(parent)) {
+                    // `import type` declarations are marked via `isTypeOnly` on the
+                    // import clause in the AST.
+                    typeOnly = !!parent.importClause?.isTypeOnly;
+                    break;
+                }
+                if (ts.isImportEqualsDeclaration(parent)) {
+                    // CommonJS style `import x = require(...)` can also be marked
+                    // as type-only via `isTypeOnly`.
+                    typeOnly = !!parent.isTypeOnly;
+                    break;
+                }
+                parent = parent.parent;
+            }
+
+            if (!typeOnly && !(aliasedSymbol.flags & ts.SymbolFlags.Value)) {
+                if (
+                    aliasDeclaration &&
+                    ts.isImportSpecifier(aliasDeclaration) &&
+                    (aliasDeclaration.propertyName?.text ?? aliasDeclaration.name.text) === aliasDeclaration.name.text
+                ) {
+                    // If the import did not explicitly rename the specifier and
+                    // the symbol resolves to a type without a runtime value,
+                    // treat it as type-only even if `import type` wasn't used.
+                    typeOnly = true;
+                }
+            }
+
+            if (typeOnly && type instanceof DefinitionType) {
+                // Inline type-only imports
+                return type.getType();
+            }
+
+            return type;
         }
 
         if (typeSymbol.flags & ts.SymbolFlags.TypeParameter) {
