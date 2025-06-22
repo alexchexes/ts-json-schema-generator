@@ -13,6 +13,7 @@ describe("vega-lite", () => {
             type: "TopLevelSpec",
             encodeRefs: false,
             skipTypeCheck: true,
+            expose: "all",
         };
 
         const generator = createGenerator(config);
