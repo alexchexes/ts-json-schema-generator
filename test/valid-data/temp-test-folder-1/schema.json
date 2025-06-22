@@ -20,8 +20,8 @@
       },
       "type": "object"
     },
-    "Exclude<(undefined)23841496,BaseValueRef<any>>": {
-      "description": "IF WE REMOVE THIS JSDOC WITHOUT REMOVING `SignalRef`, GENERATOR CRASHES (!). If replace to string and del JSDod - def name changes",
+    "Exclude<(undefined)2077486599,BaseValueRef<any>>": {
+      "description": "Some description",
       "not": {}
     },
     "ExprRef": {
@@ -39,7 +39,7 @@
         "strokeJoin": {
           "anyOf": [
             {
-              "$ref": "#/definitions/Exclude<(undefined)23841496,BaseValueRef<any>>"
+              "$ref": "#/definitions/Exclude<(undefined)2077486599,BaseValueRef<any>>"
             },
             {
               "$ref": "#/definitions/ExprRef"
