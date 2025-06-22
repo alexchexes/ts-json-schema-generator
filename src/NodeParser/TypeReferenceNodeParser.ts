@@ -8,6 +8,8 @@ import type { BaseType } from "../Type/BaseType.js";
 import { StringType } from "../Type/StringType.js";
 import { UnknownType } from "../Type/UnknownType.js";
 import { DefinitionType } from "../Type/DefinitionType.js";
+import { AliasType } from "../Type/AliasType.js";
+import { ReferenceType } from "../Type/ReferenceType.js";
 import { symbolAtNode } from "../Utils/symbolAtNode.js";
 import type { Config } from "../Config.js";
 
@@ -103,8 +105,17 @@ export class TypeReferenceNodeParser implements SubNodeParser {
 
             // Inline private imports when they are not re-exported, not local aliases
             // and we are not exposing everything
-            if (!reExported && !localAlias && this.expose !== "all" && type instanceof DefinitionType) {
-                return type.getType();
+            if (!reExported && !localAlias && this.expose !== "all") {
+                if (type instanceof DefinitionType || type instanceof AliasType) {
+                    return type.getType();
+                }
+
+                if (type instanceof ReferenceType) {
+                    const referred = type.getType();
+                    if (referred instanceof DefinitionType || referred instanceof AliasType) {
+                        return referred.getType();
+                    }
+                }
             }
 
             return type;
