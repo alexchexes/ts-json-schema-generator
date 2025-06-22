@@ -31,7 +31,7 @@ export interface ExprRef {
 export type BaseValueRef<T> = SignalRef | { value: T | null };
 
 export interface VgMarkConfig {
-    /** IF WE REMOVE THIS JSDOC WITHOUT REMOVING `SignalRef`, GENERATOR CRASHES (!). If replace to string and del JSDod - def name changes */
+    /** Some description */
     strokeJoin?: SignalRef;
 }
 
