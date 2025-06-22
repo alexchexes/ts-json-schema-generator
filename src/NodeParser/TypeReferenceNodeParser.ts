@@ -103,7 +103,7 @@ export class TypeReferenceNodeParser implements SubNodeParser {
 
             // Inline private imports when they are not re-exported, not local aliases
             // and we are not exposing everything
-            if (!localAlias && !reExported && this.expose !== "all" && type instanceof DefinitionType) {
+            if (!reExported && !localAlias && this.expose !== "all" && type instanceof DefinitionType) {
                 return type.getType();
             }
 
