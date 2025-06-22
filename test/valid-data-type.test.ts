@@ -160,4 +160,16 @@ describe("valid-data-type", () => {
         "import-export-reexport-expose-all",
         assertValidSchema("import-export-reexport-expose-all", "*", { expose: "all" }, { mainTsOnly: true }),
     );
+
+    // TEMP
+
+    it(
+        "temp-test-folder-1",
+        assertValidSchema(
+            "temp-test-folder-1",
+            "TopLevelSpec",
+            { expose: "all", encodeRefs: false },
+            { mainTsOnly: true },
+        ),
+    );
 });

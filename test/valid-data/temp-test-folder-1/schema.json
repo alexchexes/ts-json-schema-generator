@@ -1,0 +1,68 @@
+{
+  "$ref": "#/definitions/TopLevelSpec",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BaseViewBackground<hidden>": {
+      "additionalProperties": false,
+      "properties": {
+        "strokeJoin": {
+          "not": {}
+        }
+      },
+      "type": "object"
+    },
+    "Config": {
+      "additionalProperties": false,
+      "properties": {
+        "area": {
+          "$ref": "#/definitions/MarkConfig<ExprRef>"
+        }
+      },
+      "type": "object"
+    },
+    "Exclude<(undefined)23841496,BaseValueRef<any>>": {
+      "description": "IF WE REMOVE THIS JSDOC WITHOUT REMOVING `SignalRef`, GENERATOR CRASHES (!). If replace to string and del JSDod - def name changes",
+      "not": {}
+    },
+    "ExprRef": {
+      "additionalProperties": false,
+      "properties": {
+        "expr": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MarkConfig<ExprRef>": {
+      "additionalProperties": false,
+      "properties": {
+        "strokeJoin": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Exclude<(undefined)23841496,BaseValueRef<any>>"
+            },
+            {
+              "$ref": "#/definitions/ExprRef"
+            }
+          ]
+        }
+      },
+      "required": [
+        "strokeJoin"
+      ],
+      "type": "object"
+    },
+    "TopLevelSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/Config"
+        },
+        "view": {
+          "$ref": "#/definitions/BaseViewBackground<hidden>"
+        }
+      },
+      "type": "object"
+    }
+  }
+}
