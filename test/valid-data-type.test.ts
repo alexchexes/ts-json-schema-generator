@@ -174,4 +174,8 @@ describe("valid-data-type", () => {
     );
 
     it("generic-valueof", assertValidSchema("generic-valueof", "MyType", { expose: "all" }));
+    it(
+        "generic-mapped-complex",
+        assertValidSchema("generic-mapped-complex", "MyType", { expose: "all", encodeRefs: false }),
+    );
 });
