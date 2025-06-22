@@ -72,6 +72,12 @@ export class TypeReferenceNodeParser implements SubNodeParser {
             const aliasDeclaration = typeSymbol.declarations?.[0];
             let reExported = this.rootExports.has(aliasedSymbol);
 
+            // Detect pure in-file rename aliases like `import Foo = Bar.Baz;`
+            const localAlias =
+                aliasDeclaration !== undefined &&
+                ts.isImportEqualsDeclaration(aliasDeclaration) &&
+                ts.isEntityName(aliasDeclaration.moduleReference);
+
             // If the alias came from an `import { Foo } from "..."`, check whether this source file
             // also re-exports the same symbol. A re-export means `Foo` became a part of the module's
             // public surface, so we keep a separate schema definition by forcing `reExported = true`.
@@ -95,8 +101,9 @@ export class TypeReferenceNodeParser implements SubNodeParser {
                 }
             }
 
-            // Inline private imports when they are not re-exported and we are not exposing everything
-            if (!reExported && this.expose !== "all" && type instanceof DefinitionType) {
+            // Inline private imports when they are not re-exported, not local aliases
+            // and we are not exposing everything
+            if (!localAlias && !reExported && this.expose !== "all" && type instanceof DefinitionType) {
                 return type.getType();
             }
 
