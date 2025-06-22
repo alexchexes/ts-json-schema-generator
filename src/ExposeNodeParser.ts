@@ -6,6 +6,8 @@ import { DefinitionType } from "./Type/DefinitionType.js";
 import type { ReferenceType } from "./Type/ReferenceType.js";
 import { hasJsDocTag } from "./Utils/hasJsDocTag.js";
 import { symbolAtNode } from "./Utils/symbolAtNode.js";
+import { AliasType } from "./Type/AliasType.js";
+import { derefAliasedType, isDeepLiteralUnion } from "./Utils/derefType.js";
 
 export class ExposeNodeParser implements SubNodeParser {
     public constructor(
@@ -22,7 +24,7 @@ export class ExposeNodeParser implements SubNodeParser {
     public createType(node: ts.Node, context: Context, reference?: ReferenceType): BaseType {
         const baseType = this.subNodeParser.createType(node, context, reference);
 
-        if (!this.isExportNode(node)) {
+        if (!this.isExportNode(node) || this.isFromLib(node) || this.shouldInline(node, baseType)) {
             return baseType;
         }
 
@@ -48,5 +50,34 @@ export class ExposeNodeParser implements SubNodeParser {
         const argumentIds = context.getArguments().map((arg) => arg?.getName());
 
         return argumentIds.length ? `${fullName}<${argumentIds.join(",")}>` : fullName;
+    }
+
+    private isFromLib(node: ts.Node): boolean {
+        const sourceFile = node.getSourceFile();
+        if (!sourceFile) {
+            return false;
+        }
+        return /[\\/]typescript[\\/]lib[\\/]/i.test(sourceFile.fileName);
+    }
+
+    private shouldInline(node: ts.Node, type: BaseType): boolean {
+        if (!ts.isTypeAliasDeclaration(node)) {
+            return false;
+        }
+        if (!(type instanceof AliasType)) {
+            return false;
+        }
+        if (!node.typeParameters?.length) {
+            return false;
+        }
+
+        const localSymbol: ts.Symbol = (node as any).localSymbol;
+        const isExported = localSymbol ? "exportSymbol" in localSymbol : false;
+        if (isExported) {
+            return false;
+        }
+
+        const actual = derefAliasedType(type.getType());
+        return isDeepLiteralUnion(actual);
     }
 }

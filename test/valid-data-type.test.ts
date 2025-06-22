@@ -172,4 +172,6 @@ describe("valid-data-type", () => {
             { mainTsOnly: true },
         ),
     );
+
+    it("generic-valueof", assertValidSchema("generic-valueof", "MyType", { expose: "all" }));
 });

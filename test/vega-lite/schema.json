@@ -4433,7 +4433,7 @@
         }
       ]
     },
-    "BinnedTimeUnit": {
+    "BinnedLocalTimeUnit": {
       "enum": [
         "binnedyear",
         "binnedyearquarter",
@@ -4448,7 +4448,22 @@
         "binnedyearweekdayhours",
         "binnedyearweekdayhoursminutes",
         "binnedyearweekdayhoursminutesseconds",
-        "binnedyeardayofyear",
+        "binnedyeardayofyear"
+      ],
+      "type": "string"
+    },
+    "BinnedTimeUnit": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/BinnedLocalTimeUnit"
+        },
+        {
+          "$ref": "#/definitions/BinnedUtcTimeUnit"
+        }
+      ]
+    },
+    "BinnedUtcTimeUnit": {
+      "enum": [
         "binnedutcyear",
         "binnedutcyearquarter",
         "binnedutcyearquartermonth",
