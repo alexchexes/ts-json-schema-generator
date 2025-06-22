@@ -155,4 +155,5 @@ describe("valid-data-type", () => {
         "export-star-prune-unreachable",
         assertValidSchema("export-star-prune-unreachable", "*", undefined, { mainTsOnly: true }),
     );
+    it("generic-internal", assertValidSchema("generic-internal", "MyType", { expose: "all", encodeRefs: false }));
 });
