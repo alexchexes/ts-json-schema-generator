@@ -1,0 +1,55 @@
+{
+  "$ref": "#/definitions/TopLevelSpec",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BaseViewBackground<hidden>": {
+      "additionalProperties": false,
+      "properties": {
+        "strokeJoin": {
+          "description": "Some description",
+          "not": {}
+        }
+      },
+      "type": "object"
+    },
+    "Config": {
+      "additionalProperties": false,
+      "properties": {
+        "area": {
+          "$ref": "#/definitions/MarkConfig<ExprRef>"
+        }
+      },
+      "type": "object"
+    },
+    "ExprRef": {
+      "additionalProperties": false,
+      "properties": {
+        "expr": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MarkConfig<ExprRef>": {
+      "additionalProperties": false,
+      "properties": {
+        "strokeJoin": {
+          "$ref": "#/definitions/ExprRef"
+        }
+      },
+      "type": "object"
+    },
+    "TopLevelSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/Config"
+        },
+        "view": {
+          "$ref": "#/definitions/BaseViewBackground<hidden>"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

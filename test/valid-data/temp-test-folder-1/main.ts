@@ -35,9 +35,7 @@ export interface VgMarkConfig {
     strokeJoin?: SignalRef;
 }
 
-/**
- * @hidden
- */
+// /** @hidden */ // // if we uncomment this jsdoc (sic!) @hidden will make schema even more strange (in the `expose: all` mode)
 export interface SignalRef {
     signal?: string;
 }

@@ -1,0 +1,74 @@
+{
+  "$ref": "#/definitions/TopLevelSpec",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "BaseViewBackground<SignalRef>": {
+      "additionalProperties": false,
+      "properties": {
+        "strokeJoin": {
+          "$ref": "#/definitions/SignalRef"
+        }
+      },
+      "type": "object"
+    },
+    "Config": {
+      "additionalProperties": false,
+      "properties": {
+        "area": {
+          "$ref": "#/definitions/MarkConfig<(ExprRef|SignalRef)>"
+        },
+        "strokeJoin": {
+          "$ref": "#/definitions/SignalRef",
+          "description": "Some description"
+        }
+      },
+      "type": "object"
+    },
+    "ExprRef": {
+      "additionalProperties": false,
+      "properties": {
+        "expr": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "MarkConfig<(ExprRef|SignalRef)>": {
+      "additionalProperties": false,
+      "properties": {
+        "strokeJoin": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/ExprRef"
+            },
+            {
+              "$ref": "#/definitions/SignalRef"
+            }
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "SignalRef": {
+      "additionalProperties": false,
+      "properties": {
+        "signal": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "TopLevelSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/Config"
+        },
+        "view": {
+          "$ref": "#/definitions/BaseViewBackground<SignalRef>"
+        }
+      },
+      "type": "object"
+    }
+  }
+}
