@@ -1,0 +1,22 @@
+{
+  "$ref": "#/definitions/myFunction",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "myFunction": {
+      "$comment": "(untyped) =>undefined",
+      "properties": {
+        "namedArgs": {
+          "additionalProperties": false,
+          "properties": {
+            "untyped": {}
+          },
+          "required": [
+            "untyped"
+          ],
+          "type": "object"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

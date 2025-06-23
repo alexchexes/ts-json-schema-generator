@@ -13,7 +13,9 @@ describe("valid-data-other", () => {
     it("exported-enums-union", assertValidSchema("exported-enums-union", "MyObject"));
 
     it("function-parameters-default-value", assertValidSchema("function-parameters-default-value", "myFunction"));
+    it("function-parameters-default-infer", assertValidSchema("function-parameters-default-infer", "myFunction"));
     it("function-parameters-declaration", assertValidSchema("function-parameters-declaration", "myFunction"));
+    it("function-parameters-infer-type", assertValidSchema("function-parameters-infer-type", "myFunction"));
     it("function-parameters-jsdoc", assertValidSchema("function-parameters-jsdoc", "myFunction", { jsDoc: "basic" }));
     it("function-parameters-optional", assertValidSchema("function-parameters-optional", "myFunction"));
     it("function-parameters-required", assertValidSchema("function-parameters-required", "myFunction"));
@@ -21,6 +23,7 @@ describe("valid-data-other", () => {
         "function-parameters-variable-assignment",
         assertValidSchema("function-parameters-variable-assignment", "myFunction"),
     );
+    it("function-parameters-untyped", assertValidSchema("function-parameters-untyped", "myFunction"));
     it("function-function-syntax", assertValidSchema("function-function-syntax", "myFunction"));
 
     it("string-literals", assertValidSchema("string-literals", "MyObject"));
