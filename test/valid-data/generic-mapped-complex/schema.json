@@ -3,12 +3,6 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "definitions": {
     "MyType": {
-      "$ref": "#/definitions/OverrideSimple<Base,structure-303496744-294-349-303496744-268-351-303496744-246-352-303496744-0-353>"
-    },
-    "OverrideSimple<Base,structure-303496744-294-349-303496744-268-351-303496744-246-352-303496744-0-353>": {
-      "$ref": "#/definitions/Simplify<Merge<Base,structure-303496744-294-349-303496744-268-351-303496744-246-352-303496744-0-353>>"
-    },
-    "Simplify<Merge<Base,structure-303496744-294-349-303496744-268-351-303496744-246-352-303496744-0-353>>": {
       "additionalProperties": false,
       "properties": {
         "bar": {

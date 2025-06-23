@@ -8,6 +8,8 @@ import { hasJsDocTag } from "./Utils/hasJsDocTag.js";
 import { symbolAtNode } from "./Utils/symbolAtNode.js";
 import { AliasType } from "./Type/AliasType.js";
 import { derefAliasedType, isDeepLiteralUnion } from "./Utils/derefType.js";
+import { ObjectType } from "./Type/ObjectType.js";
+import { IntersectionType } from "./Type/IntersectionType.js";
 
 export class ExposeNodeParser implements SubNodeParser {
     public constructor(
@@ -24,7 +26,7 @@ export class ExposeNodeParser implements SubNodeParser {
     public createType(node: ts.Node, context: Context, reference?: ReferenceType): BaseType {
         const baseType = this.subNodeParser.createType(node, context, reference);
 
-        if (!this.isExportNode(node) || this.isFromLib(node) || this.shouldInline(node, baseType)) {
+        if (!this.isExportNode(node) || this.isFromLib(node) || this.shouldInline(node, baseType, context)) {
             return baseType;
         }
 
@@ -60,7 +62,7 @@ export class ExposeNodeParser implements SubNodeParser {
         return /[\\/]typescript[\\/]lib[\\/]/i.test(sourceFile.fileName);
     }
 
-    private shouldInline(node: ts.Node, type: BaseType): boolean {
+    private shouldInline(node: ts.Node, type: BaseType, context: Context): boolean {
         if (!ts.isTypeAliasDeclaration(node)) {
             return false;
         }
@@ -78,6 +80,21 @@ export class ExposeNodeParser implements SubNodeParser {
         }
 
         const actual = derefAliasedType(type.getType());
-        return isDeepLiteralUnion(actual);
+        if (isDeepLiteralUnion(actual)) {
+            return true;
+        }
+
+        // Inline non-exported generics producing structural object types to avoid
+        // unwieldy definition names like `Alias<structure-...>` when expose: all
+        if (actual instanceof ObjectType || actual instanceof IntersectionType) {
+            return true;
+        }
+
+        // Inline when any generic argument is structural (e.g. `structure-xyz`)
+        if (context.getArguments().some((arg) => /^structure-/.test(arg?.getName()))) {
+            return true;
+        }
+
+        return false;
     }
 }
