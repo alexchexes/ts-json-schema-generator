@@ -155,4 +155,6 @@ describe("valid-data-type", () => {
         "export-star-prune-unreachable",
         assertValidSchema("export-star-prune-unreachable", "*", undefined, { mainTsOnly: true }),
     );
+
+    it("type-literal-union-unions", assertValidSchema("type-literal-union-unions", "*"));
 });
