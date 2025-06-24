@@ -59,6 +59,7 @@ describe("valid-data-other", () => {
     it("generic-void", assertValidSchema("generic-void", "MyObject"));
     it("generic-mapped-complex", assertValidSchema("generic-mapped-complex", "*"));
     it("generic-valueof", assertValidSchema("generic-valueof", "*"));
+    it("generic-helper-reused", assertValidSchema("generic-helper-reused", "*", { encodeRefs: false }));
 
     it("nullable-null", assertValidSchema("nullable-null", "MyObject"));
 
