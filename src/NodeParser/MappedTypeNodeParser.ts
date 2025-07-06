@@ -10,6 +10,8 @@ import { DefinitionType } from "../Type/DefinitionType.js";
 import type { EnumValue } from "../Type/EnumType.js";
 import { EnumType } from "../Type/EnumType.js";
 import { LiteralType } from "../Type/LiteralType.js";
+import { AnyType } from "../Type/AnyType.js";
+import { UnknownType } from "../Type/UnknownType.js";
 import { NeverType } from "../Type/NeverType.js";
 import { NumberType } from "../Type/NumberType.js";
 import { ObjectProperty, ObjectType } from "../Type/ObjectType.js";
@@ -65,7 +67,10 @@ export class MappedTypeNodeParser implements SubNodeParser {
                 return type instanceof NeverType ? new NeverType() : new ArrayType(type);
             }
             // Key type widens to `string`
-            const type = this.childNodeParser.createType(node.type!, context);
+            const type = this.childNodeParser.createType(
+                node.type!,
+                this.createSubContext(node, keyListType, context),
+            );
             // const resultType = type instanceof NeverType ? new NeverType() : new ObjectType(id, [], [], type);
             const resultType = new ObjectType(id, [], [], type);
             if (resultType) {
@@ -159,16 +164,25 @@ export class MappedTypeNodeParser implements SubNodeParser {
         context: Context,
     ): BaseType | boolean {
         if (isDeepLiteralUnion(keyListType)) {
-            return this.additionalProperties;
+            return false;
         }
 
         const key = keyListType.getTypes().filter((type) => !(derefType(type) instanceof LiteralType))[0];
 
         if (key) {
-            return (
-                this.childNodeParser.createType(node.type!, this.createSubContext(node, key, context)) ??
-                this.additionalProperties
+            const addType = this.childNodeParser.createType(
+                node.type!,
+                this.createSubContext(node, key, context),
             );
+
+            if (
+                (addType instanceof AnyType || addType instanceof UnknownType) &&
+                keyListType.getTypes().some((t) => derefType(t) instanceof LiteralType)
+            ) {
+                return false;
+            }
+
+            return addType ?? this.additionalProperties;
         }
 
         return this.additionalProperties;
