@@ -407,6 +407,30 @@ describe("config", () => {
     );
 
     it(
+        "mapped-intersection-index",
+        assertSchema("mapped-intersection-index", {
+            type: "MyObject",
+            additionalProperties: true,
+        }),
+    );
+
+    it(
+        "mapped-index-additional",
+        assertSchema("mapped-index-additional", {
+            type: "MyObject",
+            additionalProperties: true,
+        }),
+    );
+
+    it(
+        "mapped-index-any",
+        assertSchema("mapped-index-any", {
+            type: "MyObject",
+            additionalProperties: true,
+        }),
+    );
+
+    it(
         "arrow-function-parameters",
         assertSchema("arrow-function-parameters", {
             type: "myFunction",
