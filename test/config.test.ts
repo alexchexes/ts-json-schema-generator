@@ -399,6 +399,14 @@ describe("config", () => {
     );
 
     it(
+        "mapped-intersection-complex",
+        assertSchema("mapped-intersection-complex", {
+            type: "MyObject",
+            additionalProperties: true,
+        }),
+    );
+
+    it(
         "arrow-function-parameters",
         assertSchema("arrow-function-parameters", {
             type: "myFunction",
