@@ -60,6 +60,16 @@ describe("valid-data-other", () => {
     it("generic-mapped-complex", assertValidSchema("generic-mapped-complex", "*"));
     it("generic-valueof", assertValidSchema("generic-valueof", "*"));
     it("generic-mapped-reused", assertValidSchema("generic-mapped-reused", "*", { encodeRefs: false }));
+    it("generic-mapped-reused-inline", assertValidSchema("generic-mapped-reused-inline", "*", { encodeRefs: false }));
+    it(
+        "generic-mapped-reused-same-names",
+        assertValidSchema("generic-mapped-reused-same-names", "*", { encodeRefs: false }),
+    );
+
+    it(
+        "generic-mapped-reused-same-names-same-shape",
+        assertValidSchema("generic-mapped-reused-same-names-same-shape", "*", { encodeRefs: false }),
+    );
 
     it("nullable-null", assertValidSchema("nullable-null", "MyObject"));
 
