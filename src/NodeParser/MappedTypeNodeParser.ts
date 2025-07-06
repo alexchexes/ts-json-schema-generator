@@ -65,10 +65,7 @@ export class MappedTypeNodeParser implements SubNodeParser {
                 return type instanceof NeverType ? new NeverType() : new ArrayType(type);
             }
             // Key type widens to `string`
-            const type = this.childNodeParser.createType(
-                node.type!,
-                this.createSubContext(node, keyListType, context),
-            );
+            const type = this.childNodeParser.createType(node.type!, this.createSubContext(node, keyListType, context));
             // const resultType = type instanceof NeverType ? new NeverType() : new ObjectType(id, [], [], type);
             const resultType = new ObjectType(id, [], [], type);
             if (resultType) {
@@ -165,17 +162,10 @@ export class MappedTypeNodeParser implements SubNodeParser {
             return this.additionalProperties;
         }
 
-        const types = keyListType.getTypes();
-        const literalKeys = types.filter((t) => derefType(t) instanceof LiteralType);
-        const nonLiteral = types.find((type) => !(derefType(type) instanceof LiteralType));
+        const nonLiteral = keyListType.getTypes().find((type) => !(derefType(type) instanceof LiteralType));
 
         if (nonLiteral) {
-            return (
-                this.childNodeParser.createType(
-                    node.type!,
-                    this.createSubContext(node, nonLiteral, context),
-                ) ?? this.additionalProperties
-            );
+            return this.childNodeParser.createType(node.type!, this.createSubContext(node, nonLiteral, context));
         }
 
         return this.additionalProperties;
