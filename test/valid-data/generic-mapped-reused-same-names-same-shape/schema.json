@@ -1,0 +1,97 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Bar1": {
+      "additionalProperties": false,
+      "properties": {
+        "gamma": {
+          "$ref": "#/definitions/MyHelper<alias-1225016150-36-79-1225016150-0-688,alias-1225016150-79-356-1225016150-0-688>"
+        }
+      },
+      "required": [
+        "gamma"
+      ],
+      "type": "object"
+    },
+    "Bar2": {
+      "additionalProperties": false,
+      "properties": {
+        "gamma": {
+          "$ref": "#/definitions/MyHelper<alias-1225045941-36-79-1225045941-0-681,alias-1225045941-79-349-1225045941-0-681>"
+        }
+      },
+      "required": [
+        "gamma"
+      ],
+      "type": "object"
+    },
+    "Foo1": {
+      "additionalProperties": false,
+      "properties": {
+        "beta": {
+          "$ref": "#/definitions/MyHelper<alias-1225016150-36-79-1225016150-0-688,alias-1225016150-79-356-1225016150-0-688>"
+        }
+      },
+      "required": [
+        "beta"
+      ],
+      "type": "object"
+    },
+    "Foo2": {
+      "additionalProperties": false,
+      "properties": {
+        "beta": {
+          "$ref": "#/definitions/MyHelper<alias-1225045941-36-79-1225045941-0-681,alias-1225045941-79-349-1225045941-0-681>"
+        }
+      },
+      "required": [
+        "beta"
+      ],
+      "type": "object"
+    },
+    "MyHelper<alias-1225016150-36-79-1225016150-0-688,alias-1225016150-79-356-1225016150-0-688>": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "baz": {
+          "type": "boolean"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "baz",
+        "foo"
+      ],
+      "type": "object"
+    },
+    "MyHelper<alias-1225045941-36-79-1225045941-0-681,alias-1225045941-79-349-1225045941-0-681>": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "type": "number"
+        },
+        "foo": {
+          "type": "string"
+        },
+        "x": {
+          "type": "object"
+        },
+        "y": {
+          "type": "null"
+        }
+      },
+      "required": [
+        "bar",
+        "foo",
+        "x",
+        "y"
+      ],
+      "type": "object"
+    }
+  }
+}
