@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Bar": {
+      "additionalProperties": false,
+      "properties": {
+        "gamma": {
+          "$ref": "#/definitions/MyHelper<alias-1616238610-96-139-1616238610-0-345,alias-1616238610-139-183-1616238610-0-345>"
+        }
+      },
+      "required": [
+        "gamma"
+      ],
+      "type": "object"
+    },
+    "Foo": {
+      "additionalProperties": false,
+      "properties": {
+        "beta": {
+          "$ref": "#/definitions/MyHelper<alias-1616238610-96-139-1616238610-0-345,alias-1616238610-139-183-1616238610-0-345>"
+        }
+      },
+      "required": [
+        "beta"
+      ],
+      "type": "object"
+    },
+    "MyHelper<alias-1616238610-96-139-1616238610-0-345,alias-1616238610-139-183-1616238610-0-345>": {
+      "additionalProperties": false,
+      "properties": {
+        "bar": {
+          "type": "string"
+        },
+        "baz": {
+          "type": "boolean"
+        },
+        "foo": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "bar",
+        "baz",
+        "foo"
+      ],
+      "type": "object"
+    }
+  }
+}
