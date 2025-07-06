@@ -407,6 +407,14 @@ describe("config", () => {
     );
 
     it(
+        "mapped-intersection-index",
+        assertSchema("mapped-intersection-index", {
+            type: "MyObject",
+            additionalProperties: true,
+        }),
+    );
+
+    it(
         "arrow-function-parameters",
         assertSchema("arrow-function-parameters", {
             type: "myFunction",
