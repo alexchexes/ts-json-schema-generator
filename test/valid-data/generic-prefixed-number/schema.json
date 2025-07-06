@@ -6,16 +6,13 @@
       "additionalProperties": false,
       "properties": {
         "angle": {
-          "$ref": "#/definitions/Range%3C-180%2C180%3E"
+          "type": "number"
         }
       },
       "required": [
         "angle"
       ],
       "type": "object"
-    },
-    "Range<-180,180>": {
-      "type": "number"
     }
   }
 }

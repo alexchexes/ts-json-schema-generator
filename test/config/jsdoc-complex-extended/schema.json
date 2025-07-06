@@ -6,13 +6,6 @@
       "title": "My export string",
       "type": "string"
     },
-    "MyNonEmptyArray<number>": {
-      "items": {
-        "type": "number"
-      },
-      "minItems": 1,
-      "type": "array"
-    },
     "MyObject": {
       "additionalProperties": false,
       "description": "Some description here",
@@ -46,8 +39,11 @@
           ]
         },
         "numberArray": {
-          "$ref": "#/definitions/MyNonEmptyArray%3Cnumber%3E",
-          "title": "Non empty array"
+          "items": {
+            "type": "number"
+          },
+          "minItems": 1,
+          "type": "array"
         },
         "numberValue": {
           "description": "This field is of integer type. Integer!\n\nThe type of this field is integer.\n\nThis is of type\n- integer\n- number",
