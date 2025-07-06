@@ -11,6 +11,7 @@ import type { StringMap } from "./Utils/StringMap.js";
 import { hasJsDocTag } from "./Utils/hasJsDocTag.js";
 import { removeUnreachable } from "./Utils/removeUnreachable.js";
 import { symbolAtNode } from "./Utils/symbolAtNode.js";
+import { inlineSingleUseAliases } from "./Utils/inlineSingleUseAliases.js";
 
 export class SchemaGenerator {
     public constructor(
@@ -46,6 +47,8 @@ export class SchemaGenerator {
                 );
             }
         }
+
+        inlineSingleUseAliases(rootTypeDefinition, definitions);
 
         const reachableDefinitions = rootTypeDefinitions.reduce<StringMap<Definition>>(
             (acc, def) => Object.assign(acc, removeUnreachable(def, definitions)),
