@@ -11,6 +11,7 @@ import type { StringMap } from "./Utils/StringMap.js";
 import { hasJsDocTag } from "./Utils/hasJsDocTag.js";
 import { removeUnreachable } from "./Utils/removeUnreachable.js";
 import { symbolAtNode } from "./Utils/symbolAtNode.js";
+import { inlineSingleUseDefs } from "./Utils/inlineSingleUseDefs.js";
 
 export class SchemaGenerator {
     public constructor(
@@ -52,11 +53,13 @@ export class SchemaGenerator {
             {},
         );
 
+        const inlined = inlineSingleUseDefs(rootTypeDefinition, reachableDefinitions);
+
         return {
             ...(this.config?.schemaId ? { $id: this.config.schemaId } : {}),
             $schema: "http://json-schema.org/draft-07/schema#",
-            ...(rootTypeDefinition ?? {}),
-            definitions: reachableDefinitions,
+            ...(inlined.rootDef ?? {}),
+            definitions: inlined.definitions,
         };
     }
 
