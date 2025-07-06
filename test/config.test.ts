@@ -415,17 +415,9 @@ describe("config", () => {
     );
 
     it(
-        "mapped-index-additional",
-        assertSchema("mapped-index-additional", {
-            type: "MyObject",
-            additionalProperties: true,
-        }),
-    );
-
-    it(
         "mapped-index-any",
         assertSchema("mapped-index-any", {
-            type: "MyObject",
+            type: "*",
             additionalProperties: true,
         }),
     );

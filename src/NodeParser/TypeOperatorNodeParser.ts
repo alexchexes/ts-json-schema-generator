@@ -28,10 +28,7 @@ export class TypeOperatorNodeParser implements SubNodeParser {
             return new NumberType();
         }
         const keys = getTypeKeys(type);
-        if (
-            derefed instanceof ObjectType &&
-            derefed.getAdditionalProperties() instanceof BaseType
-        ) {
+        if (derefed instanceof ObjectType && derefed.getAdditionalProperties() instanceof BaseType) {
             return new UnionType([...keys, new StringType()]);
         }
 
