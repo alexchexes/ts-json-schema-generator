@@ -5,7 +5,7 @@
       "additionalProperties": false,
       "properties": {
         "gamma": {
-          "$ref": "#/definitions/MyHelper<alias-1616238610-96-139-1616238610-0-345,alias-1616238610-139-183-1616238610-0-345>"
+          "$ref": "#/definitions/MyHelper<alias-1616238610-96-139-1616238610-0-302,alias-1616238610-139-183-1616238610-0-302>"
         }
       },
       "required": [
@@ -17,7 +17,7 @@
       "additionalProperties": false,
       "properties": {
         "beta": {
-          "$ref": "#/definitions/MyHelper<alias-1616238610-96-139-1616238610-0-345,alias-1616238610-139-183-1616238610-0-345>"
+          "$ref": "#/definitions/MyHelper<alias-1616238610-96-139-1616238610-0-302,alias-1616238610-139-183-1616238610-0-302>"
         }
       },
       "required": [
@@ -25,7 +25,7 @@
       ],
       "type": "object"
     },
-    "MyHelper<alias-1616238610-96-139-1616238610-0-345,alias-1616238610-139-183-1616238610-0-345>": {
+    "MyHelper<alias-1616238610-96-139-1616238610-0-302,alias-1616238610-139-183-1616238610-0-302>": {
       "additionalProperties": false,
       "properties": {
         "bar": {

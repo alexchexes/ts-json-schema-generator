@@ -5,11 +5,9 @@ export type MyHelper<A, B> = {
 type Base = { foo: string; bar: number };
 type Patch = { bar: string; baz: boolean };
 
-type Resolved = MyHelper<Base, Patch>; // ← `Resolved` NOT EXPORTED
-
 export interface Foo {
-    beta: Resolved;
+    beta: MyHelper<Base, Patch>;
 }
 export interface Bar {
-    gamma: Resolved;
+    gamma: MyHelper<Base, Patch>;
 }
