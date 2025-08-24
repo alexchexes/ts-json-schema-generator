@@ -1,0 +1,64 @@
+{
+  "$ref": "#/definitions/MyObject",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "MyObject": {
+      "additionalProperties": false,
+      "properties": {
+        "union1": {
+          "$ref": "#/definitions/Union1"
+        },
+        "union2": {
+          "$ref": "#/definitions/Union2"
+        },
+        "union3": {
+          "$ref": "#/definitions/Union3"
+        }
+      },
+      "required": [
+        "union1",
+        "union2",
+        "union3"
+      ],
+      "type": "object"
+    },
+    "Union1": {
+      "enum": [
+        "A",
+        "B",
+        "C"
+      ],
+      "type": "string"
+    },
+    "Union2": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Union1"
+        },
+        {
+          "const": "D",
+          "type": "string"
+        },
+        {
+          "const": "E",
+          "type": "string"
+        }
+      ]
+    },
+    "Union3": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/Union2"
+        },
+        {
+          "const": "F",
+          "type": "string"
+        },
+        {
+          "const": "G",
+          "type": "string"
+        }
+      ]
+    }
+  }
+}
