@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Base": {
+      "enum": [
+        "a",
+        "b"
+      ],
+      "type": "string"
+    },
+    "Extended": {
+      "enum": [
+        "0",
+        "a",
+        "b",
+        "c"
+      ],
+      "type": "string"
+    },
+    "Further": {
+      "enum": [
+        "0",
+        "a",
+        "b",
+        "d",
+        "e"
+      ],
+      "type": "string"
+    }
+  }
+}
