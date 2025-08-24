@@ -120,12 +120,17 @@ export class UnionTypeFormatter implements SubTypeFormatter {
                 flattenedDefinitions.push(def);
             }
         }
+        if (flattenedDefinitions.length > 1) {
+            const merged = this.tryMergeEnums(flattenedDefinitions);
+            if (merged) {
+                return merged;
+            }
+            return {
+                anyOf: flattenedDefinitions,
+            };
+        }
 
-        return flattenedDefinitions.length > 1
-            ? {
-                  anyOf: flattenedDefinitions,
-              }
-            : flattenedDefinitions[0];
+        return flattenedDefinitions[0];
     }
     public getChildren(type: UnionType): BaseType[] {
         return uniqueArray(
@@ -133,5 +138,45 @@ export class UnionTypeFormatter implements SubTypeFormatter {
                 .getTypes()
                 .reduce((result: BaseType[], item) => [...result, ...this.childTypeFormatter.getChildren(item)], []),
         );
+    }
+
+    private tryMergeEnums(defs: JSONSchema7[]): Definition | undefined {
+        if (defs.some((d) => "$ref" in d)) {
+            return undefined;
+        }
+
+        const firstType = defs[0].type;
+        if (typeof firstType !== "string") {
+            return undefined;
+        }
+
+        const values: (string | number | boolean | null)[] = [];
+
+        for (const def of defs) {
+            if (def.type !== firstType) {
+                return undefined;
+            }
+
+            const keys = Object.keys(def);
+            if (keys.some((k) => k !== "type" && k !== "enum" && k !== "const")) {
+                return undefined;
+            }
+
+            if (def.const !== undefined) {
+                if (!values.includes(def.const as any)) {
+                    values.push(def.const as any);
+                }
+            } else if (Array.isArray(def.enum)) {
+                for (const v of def.enum) {
+                    if (!values.includes(v as any)) {
+                        values.push(v as any);
+                    }
+                }
+            } else {
+                return undefined;
+            }
+        }
+
+        return { type: firstType, enum: values };
     }
 }
