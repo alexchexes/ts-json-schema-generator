@@ -4,6 +4,8 @@ import type { SubTypeFormatter } from "../SubTypeFormatter.js";
 import type { BaseType } from "../Type/BaseType.js";
 import { EnumType } from "../Type/EnumType.js";
 import { LiteralType, type LiteralValue } from "../Type/LiteralType.js";
+import { AliasType } from "../Type/AliasType.js";
+import { DefinitionType } from "../Type/DefinitionType.js";
 import { NullType } from "../Type/NullType.js";
 import { StringType } from "../Type/StringType.js";
 import { UnionType } from "../Type/UnionType.js";
@@ -21,7 +23,7 @@ export class LiteralUnionTypeFormatter implements SubTypeFormatter {
         let allStrings = true;
         let hasNull = false;
 
-        const literals = unionType.getFlattenedTypes();
+        const literals = unionType.getFlattenedTypes(derefLiteralUnionType);
 
         // filter out String types since we need to be more careful about them
         const types = literals.filter((literal) => {
@@ -76,7 +78,7 @@ export class LiteralUnionTypeFormatter implements SubTypeFormatter {
 
 export function isLiteralUnion(type: UnionType): boolean {
     return type
-        .getFlattenedTypes()
+        .getFlattenedTypes(derefLiteralUnionType)
         .every(
             (item) =>
                 item instanceof LiteralType ||
@@ -84,6 +86,13 @@ export function isLiteralUnion(type: UnionType): boolean {
                 item instanceof StringType ||
                 item instanceof EnumType,
         );
+}
+
+function derefLiteralUnionType(type: BaseType): BaseType {
+    if (type instanceof AliasType || type instanceof DefinitionType) {
+        return derefLiteralUnionType(type.getType());
+    }
+    return type;
 }
 
 /**
