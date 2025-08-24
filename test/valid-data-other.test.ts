@@ -35,6 +35,8 @@ describe("valid-data-other", () => {
         assertValidSchema("string-template-expression-literals-import", "MyObject"),
     );
 
+    it("string-union-with-ref", assertValidSchema("string-union-with-ref", "*"));
+
     it("namespace-deep-1", assertValidSchema("namespace-deep-1", "RootNamespace.Def"));
     it("namespace-deep-2", assertValidSchema("namespace-deep-2", "RootNamespace.SubNamespace.HelperA"));
     it("namespace-deep-3", assertValidSchema("namespace-deep-3", "RootNamespace.SubNamespace.HelperB"));

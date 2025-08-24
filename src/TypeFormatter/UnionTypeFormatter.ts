@@ -121,11 +121,56 @@ export class UnionTypeFormatter implements SubTypeFormatter {
             }
         }
 
-        return flattenedDefinitions.length > 1
+        const enumGroups = new Map<string, Set<any>>();
+        const otherDefinitions: JSONSchema7[] = [];
+
+        for (const def of flattenedDefinitions) {
+            if (def.$ref !== undefined) {
+                otherDefinitions.push(def);
+                continue;
+            }
+
+            const values: any[] = [];
+            if (def.const !== undefined) {
+                values.push(def.const);
+            }
+            if (def.enum !== undefined) {
+                values.push(...(def.enum as any[]));
+            }
+
+            if (values.length > 0) {
+                const key = JSON.stringify(def.type ?? null);
+                let set = enumGroups.get(key);
+                if (!set) {
+                    set = new Set();
+                    enumGroups.set(key, set);
+                }
+                for (const v of values) {
+                    set.add(v);
+                }
+            } else {
+                otherDefinitions.push(def);
+            }
+        }
+
+        for (const [key, set] of enumGroups.entries()) {
+            const type = JSON.parse(key);
+            const values = Array.from(set);
+            const schema =
+                values.length === 1
+                    ? { const: values[0] }
+                    : { enum: values };
+            if (type !== null) {
+                Object.assign(schema, { type });
+            }
+            otherDefinitions.push(schema as JSONSchema7);
+        }
+
+        return otherDefinitions.length > 1
             ? {
-                  anyOf: flattenedDefinitions,
+                  anyOf: otherDefinitions,
               }
-            : flattenedDefinitions[0];
+            : otherDefinitions[0];
     }
     public getChildren(type: UnionType): BaseType[] {
         return uniqueArray(
