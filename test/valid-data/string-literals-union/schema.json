@@ -36,11 +36,10 @@
           "$ref": "#/definitions/Union1"
         },
         {
-          "const": "D",
-          "type": "string"
-        },
-        {
-          "const": "E",
+          "enum": [
+            "D",
+            "E"
+          ],
           "type": "string"
         }
       ]
@@ -51,11 +50,10 @@
           "$ref": "#/definitions/Union2"
         },
         {
-          "const": "F",
-          "type": "string"
-        },
-        {
-          "const": "G",
+          "enum": [
+            "F",
+            "G"
+          ],
           "type": "string"
         }
       ]
