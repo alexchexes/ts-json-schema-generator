@@ -31,34 +31,26 @@
       "type": "string"
     },
     "Union2": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Union1"
-        },
-        {
-          "const": "D",
-          "type": "string"
-        },
-        {
-          "const": "E",
-          "type": "string"
-        }
-      ]
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "type": "string"
     },
     "Union3": {
-      "anyOf": [
-        {
-          "$ref": "#/definitions/Union2"
-        },
-        {
-          "const": "F",
-          "type": "string"
-        },
-        {
-          "const": "G",
-          "type": "string"
-        }
-      ]
+      "enum": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F",
+        "G"
+      ],
+      "type": "string"
     }
   }
 }
